@@ -7,6 +7,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import '../styles/global.scss';
 
+import image from '../assets/logo.png'
+
 function Login() {
     document.title = "Login FilmON";
 
@@ -34,17 +36,16 @@ function Login() {
             <div className="login">
                 <div className="login__container">
                     <div className="nameLogo">
-                        <h1>FilmON</h1>
-                        <h2>Fazer Login</h2>
-                     </div>
+                        <img src={image} alt="FilmON" />
+                    </div>
                     <div className="login__container__input">
-                        <input type="text" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-                        <input type="password" placeholder="Senha" onChange={(e) => setPassword(e.target.value)} />
-                        
-                        <button onClick={login}>Entrar</button>
+                        <input type="text" placeholder="Digite seu email" onChange={(e) => setEmail(e.target.value)} />
+                        <input type="password" placeholder="Digite sua Senha" onChange={(e) => setPassword(e.target.value)} />
+
+                        <button onClick={login}>Fazer login</button>
 
                         <div className="login__container__registro">
-                        <Link to="/register">Não tem uma conta? Cadastre-se</Link>
+                            <Link to="/register">Não tem uma conta? Cadastre-se</Link>
                         </div>
                     </div>
                 </div>

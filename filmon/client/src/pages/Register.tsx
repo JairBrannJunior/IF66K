@@ -7,6 +7,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 import '../styles/global.scss';
 
+import image from '../assets/logo.png'
+
 function Register() {
     document.title = "Cadastro FilmON";
 
@@ -36,8 +38,8 @@ function Register() {
             <div className="login">
                 <div className="login__container">
                     <div className="nameLogo">
-                        <h1>FilmON</h1>
-                        <h2>Criar uma conta</h2>
+                        <img src={image} alt="FilmON" />
+                        <h2>Faça seu cadastro</h2>
                      </div>
                     <div className="login__container__input">
                         <input type="text" placeholder="Digite seu nome"/>
