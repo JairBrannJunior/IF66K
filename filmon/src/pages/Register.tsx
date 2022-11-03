@@ -3,20 +3,22 @@ import { Link, useNavigate } from 'react-router-dom';
 import { app } from '../config/firebase';
 import { auth } from '../config/firebase';
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 import '../styles/global.scss';
 
-function Login() {
-    document.title = "Login FilmON";
+function Register() {
+    document.title = "Cadastro FilmON";
+
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [verificaPassword, setVerificaPassword] = useState('');
     const history = useNavigate();
 
-    const login = async () => {
+    const Registrar = async () => {
         try {
-            await signInWithEmailAndPassword(
+            await createUserWithEmailAndPassword(
                 auth,
                 email,
                 password
@@ -24,7 +26,7 @@ function Login() {
 
             history("/app");
         } catch {
-            window.alert("Usuário ou senha incorretos, tente novamente.");
+            window.alert("Não foi possível criar uma conta.");
         }
     };
 
@@ -35,16 +37,18 @@ function Login() {
                 <div className="login__container">
                     <div className="nameLogo">
                         <h1>FilmON</h1>
-                        <h2>Fazer Login</h2>
+                        <h2>Criar uma conta</h2>
                      </div>
                     <div className="login__container__input">
+                        <input type="text" placeholder="Digite seu nome"/>
+                        <input type="text" placeholder="Digite seu sobrenome"/>
                         <input type="text" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
                         <input type="password" placeholder="Senha" onChange={(e) => setPassword(e.target.value)} />
-                        
-                        <button onClick={login}>Entrar</button>
+                        <input type="password" placeholder="Repita sua Senha" onChange={(e) => setVerificaPassword(e.target.value)} />
+                        <button onClick={Registrar}>Fazer cadastro</button>
 
                         <div className="login__container__registro">
-                        <Link to="/register">Não tem uma conta? Cadastre-se</Link>
+                        <Link to="/">Já tem uma conta? Faça Login</Link>
                         </div>
                     </div>
                 </div>
@@ -54,4 +58,4 @@ function Login() {
 
 }
 
-export default Login;
+export default Register;
