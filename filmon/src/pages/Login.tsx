@@ -22,7 +22,7 @@ function Login() {
                 password
             );
 
-            history("/app");
+            history("/home");
         } catch {
             window.alert("Usuário ou senha incorretos, tente novamente.");
         }
