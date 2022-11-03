@@ -1,0 +1,46 @@
+.movie-card > .row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+
+    width: auto;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); 
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 6px rgba(255, 0, 0, 0.5); 
+}
+
+.image-container {
+    position: relative;
+    transition: trasnform 0.2s;
+}
+
+.image-container:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.image-container:hover .overlay {
+    opacity: 1;
+}
+
+.overlay {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    transition: 0.5s ease;
+    opacity: 0;
+    bottom: 0;
+    font-size: 20px;
+    padding: 20px;
+    text-align: center;
+}
