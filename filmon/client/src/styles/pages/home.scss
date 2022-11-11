@@ -1,8 +1,21 @@
+.general-page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.title {
+    padding-left: 0 !important;
+}
+
 .movie-card > .row {
     overflow-x: auto;
     flex-wrap: nowrap;
-
+    margin-left: 5px;
     width: auto;
+    padding-top: 20px !important;
+    margin-top: 0 !important;
 }
 
 ::-webkit-scrollbar {

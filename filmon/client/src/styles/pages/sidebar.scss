@@ -1,0 +1,25 @@
+.sidebar {
+    height: 100%;
+    background: rgba(49, 48, 48);
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.span {
+    color: red;
+}
+
+.div-span {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    width: 100%;
+}
+
+.div-span:hover {
+    opacity: 0.8;
+}
