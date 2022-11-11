@@ -26,7 +26,7 @@ function Register() {
                 password
             );
 
-            history("/app");
+            history("/");
         } catch {
             window.alert("Não foi possível criar uma conta.");
         }
