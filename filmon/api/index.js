@@ -33,13 +33,11 @@ app.post('/myListMovies', (req, res) => {
 });
 
 app.delete('/myListMovies/:id', (req, res) => {
-  console.log(req.params.id);
   myListMoviesModel.deleteMovieFromMyList(req.params.id)
   .then(response => {
     res.status(200).send(response);
   })
   .catch(error => {
-    console.log(error);
     res.status(500).send(error);
   })
 });
@@ -56,6 +54,16 @@ app.post('/saveComment', (req, res) => {
 
 app.get('/getMovieComments/:id', (req, res) => {
   myListMoviesModel.getMovieComments(req.params.id)
+  .then(response => {
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    res.status(500).send(error);
+  })
+});
+
+app.put('/watchedMovie', (req, res) => {
+  myListMoviesModel.watchedMovie(req.body)
   .then(response => {
     res.status(200).send(response);
   })

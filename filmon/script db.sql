@@ -3,7 +3,8 @@ create table mylistmovies (
 	user_id varchar(100) not null,
 	movie_id varchar(20) not null,
 	movie_name varchar(200) not null,
-	movie_img varchar(500) not null
+	movie_img varchar(500) not null,
+	watched boolean not null default false
 )
 
 create table moviecomments (

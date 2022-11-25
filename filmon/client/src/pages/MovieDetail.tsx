@@ -26,7 +26,6 @@ function MovieDetail() {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 setMovieComments(data);
             });
 	}

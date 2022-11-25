@@ -1,3 +1,4 @@
+import { getAuth, signOut } from '@firebase/auth';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,11 +15,23 @@ const Sidebar = (props: any) =>{
             history("/myList");
     };
 
+    function logout() {
+        const auth = getAuth();
+        signOut(auth).then(() => {
+            alert('Deslogado!');
+            history("/");
+        }).catch((error) => {
+            alert('Erro!')
+        });
+    }
+
     return (
         <div className="sidebar">
             <div className="div-span" onClick={redirect}>
                 <span className="span">{props.title}</span>
             </div>
+
+            <button onClick={() => logout()}>Deslogar</button>
         </div>
     );
 }

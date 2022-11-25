@@ -65,10 +65,23 @@ const getMovieComments = (id) => {
   })
 }
 
+const watchedMovie = (body) => {
+  return new Promise(function(resolve, reject) {
+    const { id } = body;
+    pool.query('update mylistmovies set watched = (select case when watched = true then false else true end as watched from mylistmovies where id = $1) where id = $1', [id], (error, results) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(`Alterado com sucesso!`);
+    })
+  })
+}
+
 module.exports = {
     getMyListMovies,
     deleteMovieFromMyList,
     addMovieToMyList,
     saveComment,
-    getMovieComments
+    getMovieComments,
+    watchedMovie
 }

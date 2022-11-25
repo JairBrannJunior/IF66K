@@ -15,16 +15,17 @@ function Home() {
     const user = auth.currentUser;
     const history = useNavigate();
 
-    console.log(user?.displayName);
-
     const getApiMovies = async (search: string) => {
-        const url = `https://www.omdbapi.com/?s=${search}&apikey=a0135b45`;
+        if (user) {
+            const url = `https://www.omdbapi.com/?s=${search}&apikey=a0135b45`;
 
-        const response = await fetch(url);
-        const json = await response.json();
-
-        if (json.Search)
-            setMovies(json.Search);
+            const response = await fetch(url);
+            const json = await response.json();
+    
+            if (json.Search)
+                setMovies(json.Search);
+        } else 
+            alert('Usuário não logado!');
     };
 
     useEffect(() => {
