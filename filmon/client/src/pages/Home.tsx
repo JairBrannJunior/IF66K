@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Sidebar from '../components/Sidebar';
 
 import { getAuth } from "firebase/auth";
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
     const [movies, setMovies] = useState([]);
@@ -12,6 +13,9 @@ function Home() {
 
     const auth = getAuth();
     const user = auth.currentUser;
+    const history = useNavigate();
+
+    console.log(user?.displayName);
 
     const getApiMovies = async (search: string) => {
         const url = `https://www.omdbapi.com/?s=${search}&apikey=a0135b45`;
@@ -45,6 +49,10 @@ function Home() {
         }
     }
 
+    function navigateToDetail(movie: any) {
+        history("/movieDetail", { state: { movie: movie } });
+    }
+
     return (
         <div className="general-page">
             <Sidebar title={"Minha lista"}/>
@@ -61,7 +69,7 @@ function Home() {
                 <div className="row">
                     {movies.map((movie, index) => (
                         <div className="image-container d-flex justify-content-start m-3">
-                            <img src={movie['Poster']} alt="movie"></img>
+                            <img src={movie['Poster']} alt="movie" onClick={() => navigateToDetail(movie)}></img>
                             <div className="overlay d-flex align-items-center justify-content-center" onClick={() => addMovieToMyList(user?.uid, movie['imdbID'], movie['Title'], movie['Poster'])}>
                                 <span className="mr-2">Adicionar a minha lista</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">

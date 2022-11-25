@@ -44,6 +44,26 @@ app.delete('/myListMovies/:id', (req, res) => {
   })
 });
 
+app.post('/saveComment', (req, res) => {
+  myListMoviesModel.saveComment(req.body)
+  .then(response => {
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    res.status(500).send(error);
+  })
+});
+
+app.get('/getMovieComments/:id', (req, res) => {
+  myListMoviesModel.getMovieComments(req.params.id)
+  .then(response => {
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    res.status(500).send(error);
+  })
+});
+
 app.listen(port, () => {
   console.log(`App running on port ${port}.`);
 });

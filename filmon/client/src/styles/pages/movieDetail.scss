@@ -1,0 +1,43 @@
+.span-comment {
+    margin-top: 10px;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.input-comment {
+    width: 90%;
+}
+
+.button-comment {
+    width: 150px;
+    border-radius: 5px;
+}
+
+.div-comments {
+    width: -webkit-fill-available;
+    border: 1px;
+    border-radius: 5px;
+    border-color: gray;
+    border-style: solid;
+    margin: 5px 0 5px 0;
+    background-color: gray;
+}
+
+.user-space, .user-title {
+    min-width: 350px;
+    margin-right: 20px;
+    word-break: break-all;
+}
+
+.comment-space, .user-space {
+    word-break: break-all;
+    margin: 5px;
+}
+
+.user-title, .comment-title {
+    font-size: 20px;
+}
+
+.div-general {
+    width: 100%;
+}

@@ -42,8 +42,33 @@ const deleteMovieFromMyList = (id) => {
     })
   }
 
+const saveComment = (body) => {
+  return new Promise(function(resolve, reject) {
+    const { userId, movieId, comment, userName} = body;
+    pool.query('insert into moviecomments (user_id, movie_id, comment, user_name) values ($1, $2, $3, $4)', [userId, movieId, comment, userName], (error, results) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(`Comentário feito com sucesso!`);
+    })
+  })
+}
+
+const getMovieComments = (id) => {
+  return new Promise(function(resolve, reject) {
+      pool.query('select * from movieComments where movie_id = $1', [id], (error, results) => {
+      if (error) {
+          reject(error);
+      }
+      resolve(results.rows);
+      })
+  })
+}
+
 module.exports = {
     getMyListMovies,
     deleteMovieFromMyList,
-    addMovieToMyList
+    addMovieToMyList,
+    saveComment,
+    getMovieComments
 }
