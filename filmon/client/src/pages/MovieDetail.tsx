@@ -11,7 +11,7 @@ function MovieDetail() {
 
     const logged = localStorage.getItem("logged");
     let user = localStorage.getItem("user") as any;
-    user = JSON.parse(user)[0];
+    user = user ? JSON.parse(user)[0] : user;
 
     const { state } = useLocation();
     let movie = state ? state.movie : {Title: '', Poster: '', imdbID: ''};

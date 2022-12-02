@@ -10,7 +10,7 @@ export default function MyList() {
 
     const logged = localStorage.getItem("logged");
     let user = localStorage.getItem("user") as any;
-    user = JSON.parse(user)[0];
+    user = user ? JSON.parse(user)[0] : user;
 	const history = useNavigate();
 
 	useEffect(() => {
