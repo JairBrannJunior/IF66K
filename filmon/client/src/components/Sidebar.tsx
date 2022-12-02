@@ -1,4 +1,3 @@
-import { getAuth, signOut } from '@firebase/auth';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,13 +15,9 @@ const Sidebar = (props: any) =>{
     };
 
     function logout() {
-        const auth = getAuth();
-        signOut(auth).then(() => {
-            alert('Deslogado!');
-            history("/");
-        }).catch((error) => {
-            alert('Erro!')
-        });
+        localStorage.setItem("logged", "0");
+        localStorage.removeItem("user");
+        history("/");
     }
 
     return (

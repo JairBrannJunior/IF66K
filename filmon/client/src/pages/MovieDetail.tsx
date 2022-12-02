@@ -1,6 +1,5 @@
-import { getAuth } from '@firebase/auth';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 
 import '../styles/global.scss';
@@ -10,29 +9,45 @@ function MovieDetail() {
     const [comment, setComment] = useState('');
     const [movieComments, setMovieComments] = useState([]);
 
-    const {state} = useLocation();
-    const { movie } = state;
+    const logged = localStorage.getItem("logged");
+    let user = localStorage.getItem("user") as any;
+    user = JSON.parse(user)[0];
 
-    const auth = getAuth();
-    const user = auth.currentUser;
+    const { state } = useLocation();
+    let movie = state ? state.movie : {Title: '', Poster: '', imdbID: ''};
+    const history = useNavigate();
 
     useEffect(() => {
+        if (logged === '0') {
+            alert('Usuário não logado!');
+            history("/");
+            return;
+        }
+
+        if (!state)
+            history("/home");
+
         getMovieComments();
     }, []);
 
 	function getMovieComments() {
-        fetch(`http://localhost:3001/getMovieComments/${movie.imdbID}`)
+        if (logged === '1') {
+            fetch(`http://localhost:3001/getMovieComments/${movie.imdbID}`)
             .then(response => {
                 return response.json();
             })
             .then(data => {
                 setMovieComments(data);
             });
+        } else {
+            alert('Usuário não logado!');
+            history("/");
+        }
 	}
 
     function saveComment(userId: any, movieId: string) {
         if (userId) {
-            const userName = user?.displayName;
+            const userName = user.name;
             fetch('http://localhost:3001/saveComment', {
                 method: 'POST',
                 headers: {
@@ -66,7 +81,7 @@ function MovieDetail() {
                 <div className="d-flex flex-column input-comment">
                     <div className="d-flex flex-row justify-content-between">
                         <input id="comment" type="text" value={comment} onChange={(e) => setComment(e.target.value)}/>
-                        <button className="button-comment" onClick={() => saveComment(user?.uid, movie.imdbID)}>Comentar</button>
+                        <button className="button-comment" onClick={() => saveComment(user.id, movie.imdbID)}>Comentar</button>
                     </div>
 
                     <div className="d-flex flex-column align-items-start justify-content-center">

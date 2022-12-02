@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../config/firebase';
-
-import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import '../styles/global.scss';
 
@@ -16,17 +13,25 @@ function Login() {
     const history = useNavigate();
 
     const login = async () => {
-        try {
-            await signInWithEmailAndPassword(
-                auth,
-                email,
-                password
-            );
-
-            history("/home");
-        } catch {
-            window.alert("Usuário ou senha incorretos, tente novamente.");
-        }
+        fetch('http://localhost:3001/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({email, password}),
+                })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.length > 0) {
+                        history("/home");
+                        localStorage.setItem("logged", "1");
+                        localStorage.setItem("user", JSON.stringify(data));
+                    }
+                    else
+                        window.alert("Usuário ou senha incorretos, tente novamente.");
+                });
     };
 
 

@@ -14,3 +14,10 @@ create table moviecomments (
 	user_name varchar(100) not null,
 	movie_id varchar(20) not null
 )
+
+create table users (
+	id serial not null primary key,
+	name varchar(200) not null,
+	email varchar(200) not null,
+	password varchar(50) not null
+)

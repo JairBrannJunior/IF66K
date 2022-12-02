@@ -3,27 +3,32 @@ import Sidebar from '../components/Sidebar';
 import { FaEye, FaEyeSlash, FaTrash } from 'react-icons/fa';
 
 import '../styles/pages/myList.scss';
-import { getAuth } from '@firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function MyList() {
     const [movies, setMovies] = useState([]);
 
-	const auth = getAuth();
-    const user = auth.currentUser;
+    const logged = localStorage.getItem("logged");
+    let user = localStorage.getItem("user") as any;
+    user = JSON.parse(user)[0];
+	const history = useNavigate();
 
 	useEffect(() => {
 		getMovies();
 	}, []);
 
 	function getMovies() {
-		if (user) {
-			fetch(`http://localhost:3001/${user?.uid}`)
+		if (logged === '1') {
+			fetch(`http://localhost:3001/${user.id}`)
 				.then(response => {
 					return response.json();
 				})
 				.then(data => {
 					setMovies(data);
 				});
+		} else {
+			alert('Usuário não logado!');
+            history("/");
 		}
 	}
 
@@ -41,7 +46,7 @@ export default function MyList() {
 	  }
 
 	function watchedMovie(id: any) {
-        if (user) {
+        if (logged === '1') {
             fetch('http://localhost:3001/watchedMovie', {
                 method: 'PUT',
                 headers: {

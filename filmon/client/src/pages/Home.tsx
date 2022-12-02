@@ -4,19 +4,19 @@ import '../styles/pages/home.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Sidebar from '../components/Sidebar';
 
-import { getAuth } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 
 function Home() {
     const [movies, setMovies] = useState([]);
     const [search, setSearch] = useState('');
 
-    const auth = getAuth();
-    const user = auth.currentUser;
+    const logged = localStorage.getItem("logged");
+    let user = localStorage.getItem("user") as any;
+    user = JSON.parse(user)[0];
     const history = useNavigate();
 
     const getApiMovies = async (search: string) => {
-        if (user) {
+        if (logged === '1') {
             const url = `https://www.omdbapi.com/?s=${search}&apikey=a0135b45`;
 
             const response = await fetch(url);
@@ -24,8 +24,10 @@ function Home() {
     
             if (json.Search)
                 setMovies(json.Search);
-        } else 
+        } else {
             alert('Usuário não logado!');
+            history("/");
+        }
     };
 
     useEffect(() => {
@@ -71,7 +73,7 @@ function Home() {
                     {movies.map((movie, index) => (
                         <div className="image-container d-flex justify-content-start m-3">
                             <img src={movie['Poster']} alt="movie" onClick={() => navigateToDetail(movie)}></img>
-                            <div className="overlay d-flex align-items-center justify-content-center" onClick={() => addMovieToMyList(user?.uid, movie['imdbID'], movie['Title'], movie['Poster'])}>
+                            <div className="overlay d-flex align-items-center justify-content-center" onClick={() => addMovieToMyList(user.id, movie['imdbID'], movie['Title'], movie['Poster'])}>
                                 <span className="mr-2">Adicionar a minha lista</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>

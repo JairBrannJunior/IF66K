@@ -72,6 +72,26 @@ app.put('/watchedMovie', (req, res) => {
   })
 });
 
+app.post('/login', (req, res) => {
+  myListMoviesModel.login(req.body)
+  .then(response => {
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    res.status(500).send(error);
+  })
+});
+
+app.post('/register', (req, res) => {
+  myListMoviesModel.register(req.body)
+  .then(response => {
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    res.status(500).send(error);
+  })
+});
+
 app.listen(port, () => {
   console.log(`App running on port ${port}.`);
 });
