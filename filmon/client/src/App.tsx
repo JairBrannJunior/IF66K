@@ -4,6 +4,7 @@ import './styles/global.scss';
 
 import RoutePaths from './routes';
 
+
 function App() {
   return (
     <RoutePaths />

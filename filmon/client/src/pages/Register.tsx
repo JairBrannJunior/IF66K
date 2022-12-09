@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../styles/global.scss';
 
 import image from '../assets/logo.png'
+import { register } from '../functions/register';
 
 function Register() {
     document.title = "Cadastro FilmON";
@@ -14,20 +15,9 @@ function Register() {
     const history = useNavigate();
 
     const Registrar = async () => {
-        fetch('http://localhost:3001/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({email, password, name}),
-                })
-                .then(response => {
-                    return response.text();
-                })
-                .then(data => {
-                    alert(data);
-                    history("/");
-                });
+        const data = await register(email, password, name);
+        alert(data);
+        history("/");
     };
 
     return (

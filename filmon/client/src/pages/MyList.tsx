@@ -96,7 +96,7 @@ export default function MyList() {
 								</div>
 							}
 							
-							<div className="icon" onClick={() => removeMovie(movie['id'])}>
+							<div role="delete" className="icon" onClick={() => removeMovie(movie['id'])}>
 								<FaTrash color="white"/>
 							</div>
 						</div>

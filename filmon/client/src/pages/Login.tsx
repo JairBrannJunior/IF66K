@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { login } from '../functions/login';
 
 import '../styles/global.scss';
 
@@ -12,26 +13,14 @@ function Login() {
     const [password, setPassword] = useState('');
     const history = useNavigate();
 
-    const login = async () => {
-        fetch('http://localhost:3001/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({email, password}),
-                })
-                .then(response => {
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.length > 0) {
-                        history("/home");
-                        localStorage.setItem("logged", "1");
-                        localStorage.setItem("user", JSON.stringify(data));
-                    }
-                    else
-                        window.alert("Usuário ou senha incorretos, tente novamente.");
-                });
+    const handleLogin = async () => {
+        const data = await login(email, password);
+        if (data.length > 0) {
+            history("/home");
+            localStorage.setItem("logged", "1");
+            localStorage.setItem("user", JSON.stringify(data));
+        } else
+            window.alert("Usuário ou senha incorretos, tente novamente.");
     };
 
 
@@ -46,7 +35,7 @@ function Login() {
                         <input type="text" placeholder="Digite seu email" onChange={(e) => setEmail(e.target.value)} />
                         <input type="password" placeholder="Digite sua Senha" onChange={(e) => setPassword(e.target.value)} />
 
-                        <button onClick={login}>Fazer login</button>
+                        <button id="login-button" onClick={handleLogin}>Fazer login</button>
 
                         <div className="login__container__registro">
                             <Link to="/register">Não tem uma conta? Cadastre-se</Link>

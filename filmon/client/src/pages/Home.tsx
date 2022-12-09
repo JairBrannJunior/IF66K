@@ -10,7 +10,7 @@ function Home() {
     const [movies, setMovies] = useState([]);
     const [search, setSearch] = useState('');
 
-    const logged = localStorage.getItem("logged");
+    let logged = localStorage.getItem("logged");
     let user = localStorage.getItem("user") as any;
     user = user ? JSON.parse(user)[0] : user;
     const history = useNavigate();
