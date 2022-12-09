@@ -59,9 +59,6 @@ describe('home', () => {
 
     render(<Home />, { wrapper: BrowserRouter });
 
-    const inputSearch = screen.getByPlaceholderText('Digite para pesquisar...');
-    fireEvent.change(inputSearch, { target: { value: 'harry' } });
-
     await new Promise((r) => setTimeout(r, 3000));
     
     expect(window.alert).toBeCalledWith('Usuário não logado!');

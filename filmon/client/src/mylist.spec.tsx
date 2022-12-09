@@ -60,7 +60,7 @@ describe('mylist', () => {
     localStorage.setItem("logged", "1");
     localStorage.setItem("user", JSON.stringify([{ id: 1, name: 'Jair', email: 'teste@email.com', password: '123456' }]));
     fetch.mockResponses(
-        [        
+        [
             JSON.stringify( 
                 [{
                     id: 1,

@@ -15,7 +15,7 @@ jest.spyOn(window, 'alert').mockImplementation(() => {});
 
 fetch.enableMocks();
 
-test('sum', () => {
+test('register', () => {
   render(<Register />, { wrapper: BrowserRouter });
   
   expect(screen.getByText('Fazer cadastro')).toBeTruthy();
@@ -37,7 +37,7 @@ it('input data', () => {
     expect(screen.getByDisplayValue('123456') === inputPassword).toBe(true)
 });
 
-it('register', async () => {
+it('register-data', async () => {
   render(<Register />, { wrapper: BrowserRouter });
 
   const button = screen.getByText("Fazer cadastro");
