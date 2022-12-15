@@ -1,4 +1,8 @@
+import { env } from './enviroment';
+
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const { expressjwt } = require("express-jwt");
 const app = express();
 const port = 3001;
 
@@ -8,7 +12,7 @@ app.use(express.json());
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers, Authorization');
   next();
 });
 
@@ -22,7 +26,7 @@ app.get('/:id', (req, res) => {
   })
 });
 
-app.post('/myListMovies', (req, res) => {
+app.post('/myListMovies', expressjwt({ secret: env.codeKey, algorithms: ['HS256']}), (req, res) => {
   myListMoviesModel.addMovieToMyList(req.body)
   .then(response => {
     res.status(200).send(response);
@@ -75,7 +79,15 @@ app.put('/watchedMovie', (req, res) => {
 app.post('/login', (req, res) => {
   myListMoviesModel.login(req.body)
   .then(response => {
-    res.status(200).send(response);
+    if (response.length > 0) {
+      console.log(response);
+      const token = jwt.sign({
+        id: response[0].id,
+        name: response[0].name
+      }, env.codeKey);
+      res.json({ token: token });
+    } else
+      res.status(403).json({ message: 'Invalid user or password!' })
   })
   .catch(error => {
     res.status(500).send(error);

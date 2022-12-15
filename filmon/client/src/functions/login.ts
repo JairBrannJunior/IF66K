@@ -7,6 +7,6 @@ export async function login(email: string, password: string) {
         body: JSON.stringify({email, password}),
         })            
         .then(response => {
-            return response.json() as any;
+            return response as Response;
         });
 }

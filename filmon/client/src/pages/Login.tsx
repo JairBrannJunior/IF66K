@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../functions/login';
+import jwt_decode from "jwt-decode";
 
 import '../styles/global.scss';
 
@@ -14,15 +15,18 @@ function Login() {
     const history = useNavigate();
 
     const handleLogin = async () => {
-        const data = await login(email, password);
-        if (data.length > 0) {
+        const response = await login(email, password);
+        let token = await response.json();
+        token = token.token;
+        const decodedData = jwt_decode(token) as any;
+
+        if (response.status === 200) {
+            localStorage.setItem("token", token);
+            localStorage.setItem("userData", JSON.stringify({ userId: decodedData.id, userName: decodedData.name }));
             history("/home");
-            localStorage.setItem("logged", "1");
-            localStorage.setItem("user", JSON.stringify(data));
         } else
             window.alert("Usuário ou senha incorretos, tente novamente.");
     };
-
 
     return (
         <div>

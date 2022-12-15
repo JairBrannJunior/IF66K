@@ -80,7 +80,7 @@ const watchedMovie = (body) => {
 const login = (body) => {
   return new Promise(function(resolve, reject) {
     const { email, password } = body;
-    pool.query('select * from users where email = $1 and password = $2', [email, password], (error, results) => {
+    pool.query('select id, name from users where email = $1 and password = $2', [email, password], (error, results) => {
       if (error) {
         reject(error);
       }
