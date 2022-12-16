@@ -55,8 +55,6 @@ describe('home', () => {
   });
 
   it('not logged', async () => {
-    localStorage.setItem("logged", "0");
-
     render(<Home />, { wrapper: BrowserRouter });
 
     await new Promise((r) => setTimeout(r, 3000));

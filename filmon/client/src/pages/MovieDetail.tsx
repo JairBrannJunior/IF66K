@@ -24,8 +24,10 @@ function MovieDetail() {
             return;
         }
 
-        if (!state)
+        if (!state) {
             history("/home");
+            return;
+        }
 
         getMovieComments();
     }, []);
@@ -102,7 +104,7 @@ function MovieDetail() {
                 <span className="span-comment">Comentários</span>
                 <div className="d-flex flex-column input-comment">
                     <div className="d-flex flex-row justify-content-between">
-                        <input id="comment" type="text" value={comment} onChange={(e) => setComment(e.target.value)}/>
+                        <input id="comment" type="text" placeholder="Digite seu comentário" value={comment} onChange={(e) => setComment(e.target.value)}/>
                         <button className="button-comment" onClick={() => saveComment(userData.userId, movie.imdbID)}>Comentar</button>
                     </div>
 

@@ -79,7 +79,6 @@ app.post('/login', (req, res) => {
   myListMoviesModel.login(req.body)
   .then(response => {
     if (response.length > 0) {
-      console.log(codeKey);
       const token = jwt.sign({
         id: response[0].id,
         name: response[0].name

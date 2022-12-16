@@ -122,11 +122,11 @@ export default function MyList() {
 						<div className="d-flex flex-row">
 							{
 								movie['watched'] ?
-								<div className="icon" onClick={() => watchedMovie(movie['id'])}>
+								<div role="watched" className="icon" onClick={() => watchedMovie(movie['id'])}>
 									<FaEyeSlash color="white"/>
 								</div>
 								:
-								<div className="icon" onClick={() => watchedMovie(movie['id'])}>
+								<div role="not-watched" className="icon" onClick={() => watchedMovie(movie['id'])}>
 									<FaEye color="white"/>
 								</div>
 							}

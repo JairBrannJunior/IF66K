@@ -56,43 +56,196 @@ describe('mylist', () => {
     expect(screen.getByText('Minha Lista')).toBeTruthy();
   });
 
-  it('view', async () => {
-    localStorage.setItem("logged", "1");
-    localStorage.setItem("user", JSON.stringify([{ id: 1, name: 'Jair', email: 'teste@email.com', password: '123456' }]));
+  it('delete-movie', async () => {
+    localStorage.setItem("token", "token-válido");
+    localStorage.setItem("userData", JSON.stringify([{ userId: 1, userName: 'Jair' }]));
     fetch.mockResponses(
         [
             JSON.stringify( 
-                [{
+                [
+                  {
                     id: 1,
-                    userId: 'Jair',
-                    movieId: 'teste@email.com',
-                    movieName: '123456',
-                    movieImg: 'asasa',
-                    whatched: true
-                }]
+                    movie_name: 'Teste filme 1',
+                    movie_img: 'img',
+                    watched: true
+                  },
+                  {
+                    id: 2,
+                    movie_name: 'Teste filme 2',
+                    movie_img: 'img',
+                    watched: true
+                  },
+                  {
+                    id: 3,
+                    movie_name: 'Teste filme 3',
+                    movie_img: 'img',
+                    watched: true
+                  },
+                  {
+                    id: 4,
+                    movie_name: 'Teste filme 4',
+                    movie_img: 'img',
+                    watched: false
+                  },
+                  {
+                    id: 5,
+                    movie_name: 'Teste filme 5',
+                    movie_img: 'img',
+                    watched: false
+                  }
+                ]
             ), {status: 200}
         ],
         [
             'Filme removido da lista', {status: 200}
         ],
         [
-            JSON.stringify( 
-                []
-            ), {status: 200}
-        ]
+          JSON.stringify( 
+              [
+                {
+                  id: 1,
+                  movie_name: 'Teste filme 1',
+                  movie_img: 'img',
+                  watched: true
+                },
+                {
+                  id: 2,
+                  movie_name: 'Teste filme 2',
+                  movie_img: 'img',
+                  watched: true
+                },
+                {
+                  id: 3,
+                  movie_name: 'Teste filme 3',
+                  movie_img: 'img',
+                  watched: true
+                },
+                {
+                  id: 5,
+                  movie_name: 'Teste filme 5',
+                  movie_img: 'img',
+                  watched: false
+                }
+              ]
+          ), {status: 200}
+      ]
 
     );
 
     render(<MyList />, { wrapper: BrowserRouter });
-    await new Promise((r) => setTimeout(r, 3000));
-
-    const button = screen.getByRole("delete");
-    expect(button).toBeInTheDocument();
-
-    fireEvent.click(button);
 
     await new Promise((r) => setTimeout(r, 3000));
-    expect(button).not.toBeInTheDocument();
+
+    expect(screen.getAllByText('(Já assistido!)')).toHaveLength(3);
+
+    const movieText = screen.queryByText("Teste filme 4");
+    expect(movieText).toBeInTheDocument();
+
+    const buttons = screen.getAllByRole("delete");
+
+    fireEvent.click(buttons[3]);
+
+    await new Promise((r) => setTimeout(r, 3000));
+
+    const movieText2 = screen.queryByText("Teste filme 4");
+    expect(movieText2).not.toBeInTheDocument();
+  })
+
+  it('unwatch-movie', async () => {
+    localStorage.setItem("token", "token-válido");
+    localStorage.setItem("userData", JSON.stringify([{ userId: 1, userName: 'Jair' }]));
+    fetch.mockResponses(
+        [
+            JSON.stringify( 
+                [
+                  {
+                    id: 1,
+                    movie_name: 'Teste filme 1',
+                    movie_img: 'img',
+                    watched: true
+                  },
+                  {
+                    id: 2,
+                    movie_name: 'Teste filme 2',
+                    movie_img: 'img',
+                    watched: true
+                  },
+                  {
+                    id: 3,
+                    movie_name: 'Teste filme 3',
+                    movie_img: 'img',
+                    watched: true
+                  },
+                  {
+                    id: 4,
+                    movie_name: 'Teste filme 4',
+                    movie_img: 'img',
+                    watched: false
+                  },
+                  {
+                    id: 5,
+                    movie_name: 'Teste filme 5',
+                    movie_img: 'img',
+                    watched: false
+                  }
+                ]
+            ), {status: 200}
+        ],
+        [
+            'Filme marcado como assistido', {status: 200}
+        ],
+        [
+          JSON.stringify( 
+              [
+                {
+                  id: 1,
+                  movie_name: 'Teste filme 1',
+                  movie_img: 'img',
+                  watched: false
+                },
+                {
+                  id: 2,
+                  movie_name: 'Teste filme 2',
+                  movie_img: 'img',
+                  watched: true
+                },
+                {
+                  id: 3,
+                  movie_name: 'Teste filme 3',
+                  movie_img: 'img',
+                  watched: true
+                },
+                {
+                  id: 4,
+                  movie_name: 'Teste filme 4',
+                  movie_img: 'img',
+                  watched: false
+                },
+                {
+                  id: 5,
+                  movie_name: 'Teste filme 5',
+                  movie_img: 'img',
+                  watched: false
+                }
+              ]
+          ), {status: 200}
+      ]
+
+    );
+
+    render(<MyList />, { wrapper: BrowserRouter });
+
+    await new Promise((r) => setTimeout(r, 3000));
+
+    const buttons = screen.getAllByRole("watched");
+    expect(buttons).toHaveLength(3);
+
+    fireEvent.click(buttons[0]);
+
+    await new Promise((r) => setTimeout(r, 3000));
+
+    const buttons2 = screen.getAllByRole("watched");
+    expect(buttons2).toHaveLength(2);
   })
 
 });

@@ -16,16 +16,17 @@ function Login() {
 
     const handleLogin = async () => {
         const response = await login(email, password);
+
+        if (response.status !== 200)
+            return window.alert("Usuário ou senha incorretos, tente novamente.");
+
         let token = await response.json();
         token = token.token;
         const decodedData = jwt_decode(token) as any;
 
-        if (response.status === 200) {
-            localStorage.setItem("token", token);
-            localStorage.setItem("userData", JSON.stringify({ userId: decodedData.id, userName: decodedData.name }));
-            history("/home");
-        } else
-            window.alert("Usuário ou senha incorretos, tente novamente.");
+        localStorage.setItem("token", token);
+        localStorage.setItem("userData", JSON.stringify({ userId: decodedData.id, userName: decodedData.name }));
+        history("/home");
     };
 
     return (

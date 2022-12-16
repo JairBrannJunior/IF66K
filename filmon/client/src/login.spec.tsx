@@ -26,20 +26,8 @@ describe('login', () => {
     expect(screen.getByText('Fazer login')).toBeTruthy();
   });
 
-  it('input data', () => {
-    render(<Login />, { wrapper: BrowserRouter });
-    
-    const inputEmail = screen.getByPlaceholderText("Digite seu email");
-    fireEvent.change(inputEmail, { target: { value: 'teste@email.com' } });
-    expect(screen.getByDisplayValue('teste@email.com') === inputEmail).toBe(true)
-
-    const inputPassword = screen.getByPlaceholderText("Digite sua Senha");
-    fireEvent.change(inputPassword, { target: { value: '123456' } });
-    expect(screen.getByDisplayValue('123456') === inputPassword).toBe(true)
-  });
-
   it('login', async () => {
-    fetch.mockResponseOnce(JSON.stringify( [{ id: 1, name: 'Jair', email: 'teste@email.com', password: '123456' }]));
+    fetch.mockResponseOnce(JSON.stringify({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c' }));
 
     render(<Login />, { wrapper: BrowserRouter });
 
@@ -52,7 +40,7 @@ describe('login', () => {
   });
 
   it('login-failed', async () => {
-    fetch.mockResponseOnce(JSON.stringify( [] ));
+    fetch.mockResponseOnce(JSON.stringify( { token: '' } ), {status: 401});
 
     render(<Login />, { wrapper: BrowserRouter });
 
