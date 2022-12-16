@@ -8,9 +8,9 @@ import { useNavigate } from 'react-router-dom';
 export default function MyList() {
     const [movies, setMovies] = useState([]);
 
-    const logged = localStorage.getItem("logged");
-    let user = localStorage.getItem("user") as any;
-    user = user ? JSON.parse(user)[0] : user;
+    const token = localStorage.getItem("token");
+    let userData = localStorage.getItem("userData") as any;
+    userData = userData ? JSON.parse(userData) : '';
 	const history = useNavigate();
 
 	useEffect(() => {
@@ -18,13 +18,24 @@ export default function MyList() {
 	}, []);
 
 	function getMovies() {
-		if (logged === '1') {
-			fetch(`http://localhost:3001/${user.id}`)
+		if (token) {
+			fetch(`http://localhost:3001/${userData.userId}`, {
+					headers: {
+						'Authorization': `Bearer ${token}`
+					}
+				})
 				.then(response => {
-					return response.json();
+					if (response.status === 401)
+                    	return response.status.toString();
+					else
+						return response.json();
 				})
 				.then(data => {
-					setMovies(data);
+					if (data === '401') {
+                        alert('Usuário não logado!');
+                        history("/");
+                    } else
+						setMovies(data);
 				});
 		} else {
 			alert('Usuário não logado!');
@@ -33,32 +44,56 @@ export default function MyList() {
 	}
 
 	function removeMovie(id: string) {
-		fetch(`http://localhost:3001/myListMovies/${id}`, {
-		  method: 'DELETE',
-		})
-		  .then(response => {
-			return response.text();
-		  })
-		  .then(data => {
-			alert(data);
-			getMovies();
-		  });
-	  }
+		if (token) {
+			fetch(`http://localhost:3001/myListMovies/${id}`, {
+				method: 'DELETE',
+				headers: {
+				  'Authorization': `Bearer ${token}`
+				}
+			  })
+				.then(response => {
+					if (response.status === 401)
+						return response.status.toString();
+					else
+						return response.text();
+				})
+				.then(data => {
+					if (data === '401') {
+                        alert('Usuário não logado!');
+                        history("/");
+                    } else {
+						alert(data);
+						getMovies();
+					}	
+				});
+		} else {
+			alert('Usuário não logado!');
+            history("/");
+		}
+	}
 
 	function watchedMovie(id: any) {
-        if (logged === '1') {
+        if (token) {
             fetch('http://localhost:3001/watchedMovie', {
                 method: 'PUT',
                 headers: {
+					'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({id}),
                 })
                 .then(response => {
-                    return response.text();
+                    if (response.status === 401)
+						return response.status.toString();
+					else
+						return response.text();
                 })
                 .then(data => {
-					getMovies();
+					if (data === '401') {
+                        alert('Usuário não logado!');
+                        history("/");
+                    } else
+						getMovies();
                 });
         }
     }

@@ -1,5 +1,4 @@
-import { env } from './enviroment';
-
+const codeKey = require('./enviroment');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const { expressjwt } = require("express-jwt");
@@ -16,7 +15,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get('/:id', (req, res) => {
+app.get('/:id', expressjwt({ secret: codeKey, algorithms: ['HS256']}), (req, res) => {
   myListMoviesModel.getMyListMovies(req.params.id)
   .then(response => {
     res.status(200).send(response);
@@ -26,7 +25,7 @@ app.get('/:id', (req, res) => {
   })
 });
 
-app.post('/myListMovies', expressjwt({ secret: env.codeKey, algorithms: ['HS256']}), (req, res) => {
+app.post('/myListMovies', expressjwt({ secret: codeKey, algorithms: ['HS256']}), (req, res) => {
   myListMoviesModel.addMovieToMyList(req.body)
   .then(response => {
     res.status(200).send(response);
@@ -36,7 +35,7 @@ app.post('/myListMovies', expressjwt({ secret: env.codeKey, algorithms: ['HS256'
   })
 });
 
-app.delete('/myListMovies/:id', (req, res) => {
+app.delete('/myListMovies/:id', expressjwt({ secret: codeKey, algorithms: ['HS256']}), (req, res) => {
   myListMoviesModel.deleteMovieFromMyList(req.params.id)
   .then(response => {
     res.status(200).send(response);
@@ -46,7 +45,7 @@ app.delete('/myListMovies/:id', (req, res) => {
   })
 });
 
-app.post('/saveComment', (req, res) => {
+app.post('/saveComment', expressjwt({ secret: codeKey, algorithms: ['HS256']}), (req, res) => {
   myListMoviesModel.saveComment(req.body)
   .then(response => {
     res.status(200).send(response);
@@ -56,7 +55,7 @@ app.post('/saveComment', (req, res) => {
   })
 });
 
-app.get('/getMovieComments/:id', (req, res) => {
+app.get('/getMovieComments/:id', expressjwt({ secret: codeKey, algorithms: ['HS256']}), (req, res) => {
   myListMoviesModel.getMovieComments(req.params.id)
   .then(response => {
     res.status(200).send(response);
@@ -66,7 +65,7 @@ app.get('/getMovieComments/:id', (req, res) => {
   })
 });
 
-app.put('/watchedMovie', (req, res) => {
+app.put('/watchedMovie', expressjwt({ secret: codeKey, algorithms: ['HS256']}), (req, res) => {
   myListMoviesModel.watchedMovie(req.body)
   .then(response => {
     res.status(200).send(response);
@@ -80,11 +79,11 @@ app.post('/login', (req, res) => {
   myListMoviesModel.login(req.body)
   .then(response => {
     if (response.length > 0) {
-      console.log(response);
+      console.log(codeKey);
       const token = jwt.sign({
         id: response[0].id,
         name: response[0].name
-      }, env.codeKey);
+      }, codeKey);
       res.json({ token: token });
     } else
       res.status(403).json({ message: 'Invalid user or password!' })

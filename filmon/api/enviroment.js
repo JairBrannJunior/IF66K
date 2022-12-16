@@ -1,5 +1,3 @@
-const env = {
-    codeKey: "3vGtbiYG3r5uCPpKvIZf"
-}
+const codeKey = "3vGtbiYG3r5uCPpKvIZf";
 
-export { env };
+module.exports = codeKey;

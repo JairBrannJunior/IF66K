@@ -45,10 +45,18 @@ function Home() {
                 body: JSON.stringify({userId, movieId, movieName, movieImg}),
                 })
                 .then(response => {
-                    return response.text();
+                    if (response.status === 401)
+                        return response.status.toString();
+                    else
+                        return response.text();
                 })
                 .then(data => {
-                    alert(data);
+                    if (data === '401') {
+                        alert('Usuário não logado!');
+                        history("/");
+                    }
+                    else
+                        alert(data);
                 });
         }
     }

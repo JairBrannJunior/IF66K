@@ -15,8 +15,8 @@ const Sidebar = (props: any) =>{
     };
 
     function logout() {
-        localStorage.setItem("logged", "0");
-        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        localStorage.removeItem("userData");
         history("/");
     }
 

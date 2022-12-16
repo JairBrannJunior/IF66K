@@ -7,6 +7,6 @@ export async function register(email: string, password: string, name: string) {
         body: JSON.stringify({email, password, name}),
         })            
         .then(response => {
-            return response.json() as any;
+            return response.text();
         });
 }

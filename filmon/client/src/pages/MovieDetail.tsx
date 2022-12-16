@@ -9,16 +9,16 @@ function MovieDetail() {
     const [comment, setComment] = useState('');
     const [movieComments, setMovieComments] = useState([]);
 
-    const logged = localStorage.getItem("logged");
-    let user = localStorage.getItem("user") as any;
-    user = user ? JSON.parse(user)[0] : user;
+    const token = localStorage.getItem("token");
+    let userData = localStorage.getItem("userData") as any;
+    userData = userData ? JSON.parse(userData) : '';
 
     const { state } = useLocation();
     let movie = state ? state.movie : {Title: '', Poster: '', imdbID: ''};
     const history = useNavigate();
 
     useEffect(() => {
-        if (logged === '0') {
+        if (!token) {
             alert('Usuário não logado!');
             history("/");
             return;
@@ -31,13 +31,24 @@ function MovieDetail() {
     }, []);
 
 	function getMovieComments() {
-        if (logged === '1') {
-            fetch(`http://localhost:3001/getMovieComments/${movie.imdbID}`)
+        if (token) {
+            fetch(`http://localhost:3001/getMovieComments/${movie.imdbID}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
             .then(response => {
-                return response.json();
+                if (response.status === 401)
+                    return response.status.toString();
+                else
+                    return response.json();
             })
             .then(data => {
-                setMovieComments(data);
+                if (data === '401') {
+                    alert('Usuário não logado!');
+                    history("/");
+                } else
+                    setMovieComments(data);
             });
         } else {
             alert('Usuário não logado!');
@@ -46,25 +57,36 @@ function MovieDetail() {
 	}
 
     function saveComment(userId: any, movieId: string) {
-        if (userId) {
-            const userName = user.name;
+        if (token) {
+            const userName = userData.userName;
             fetch('http://localhost:3001/saveComment', {
                 method: 'POST',
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({userId, movieId, comment, userName}),
                 })
                 .then(response => {
-                    return response.text();
+                    if (response.status === 401)
+                        return response.status.toString();
+                    else
+                        return response.text();
                 })
                 .then(data => {
-                    setComment('');
-                    getMovieComments();
-                    alert(data);
+                    if (data === '401') {
+                        alert('Usuário não logado!');
+                        history("/");
+                    } else {
+                        setComment('');
+                        getMovieComments();
+                        alert(data);
+                    }
                 });
-        } else
+        } else {
             alert('Usuário não logado!');
+            history("/");
+        }
     }
 
     return (
@@ -81,7 +103,7 @@ function MovieDetail() {
                 <div className="d-flex flex-column input-comment">
                     <div className="d-flex flex-row justify-content-between">
                         <input id="comment" type="text" value={comment} onChange={(e) => setComment(e.target.value)}/>
-                        <button className="button-comment" onClick={() => saveComment(user.id, movie.imdbID)}>Comentar</button>
+                        <button className="button-comment" onClick={() => saveComment(userData.userId, movie.imdbID)}>Comentar</button>
                     </div>
 
                     <div className="d-flex flex-column align-items-start justify-content-center">
