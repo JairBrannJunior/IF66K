@@ -54,7 +54,10 @@ describe('home', () => {
     expect(screen.getByPlaceholderText('Digite para pesquisar...')).toBeTruthy();
   });
 
+  
+
   it('not logged', async () => {
+	localStorage.clear();
     render(<Home />, { wrapper: BrowserRouter });
 
     await new Promise((r) => setTimeout(r, 3000));

@@ -3,7 +3,6 @@ import { BrowserRouter } from 'react-router-dom';
 import * as React from 'react';
 import fetch from 'jest-fetch-mock';
 import MovieDetail from './pages/MovieDetail';
-import nock from 'nock';
 
 fetch.enableMocks();
 jest.spyOn(window, 'alert').mockImplementation(() => {});
@@ -39,6 +38,8 @@ const localStorageMock = (function () {
 	  },
 	};
   })();
+
+  Object.defineProperty(window, "localStorage", { value: localStorageMock });
 
 describe('movie-detail', () => {
   beforeEach(() => {
@@ -90,6 +91,7 @@ describe('movie-detail', () => {
         movie_id: 'tt1201607' 
       }
     ]));
+    localStorage.clear();
     localStorage.setItem("token", "token-válido");
     render(<MovieDetail />, { wrapper: BrowserRouter });
 
@@ -99,5 +101,126 @@ describe('movie-detail', () => {
     expect(screen.queryByText('Teste comentário não existe')).not.toBeTruthy();
     expect(screen.queryAllByText('Teste Usuário 2')).toHaveLength(2);
     expect(screen.queryAllByText('Teste Usuário não existe')).toHaveLength(0);
+  });
+
+  it('comment', async () => {
+    localStorage.clear();
+    localStorage.setItem("token", "token-válido");
+    fetch.mockResponses(
+      [
+          JSON.stringify( 
+              [
+                { 
+                  id: '1',
+                  comment: 'Teste comentário 1',
+                  user_id: '1',
+                  user_name: 'Teste Usuário 1',
+                  movie_id: 'tt1201607' 
+                },
+                { 
+                  id: '2',
+                  comment: 'Teste comentário 2',
+                  user_id: '1',
+                  user_name: 'Teste Usuário 1',
+                  movie_id: 'tt1201607' 
+                },
+                { 
+                  id: '3',
+                  comment: 'Teste comentário 3',
+                  user_id: '2',
+                  user_name: 'Teste Usuário 2',
+                  movie_id: 'tt1201607' 
+                },
+                { 
+                  id: '4',
+                  comment: 'Teste comentário 4',
+                  user_id: '2',
+                  user_name: 'Teste Usuário 2',
+                  movie_id: 'tt1201607'
+                },
+                { 
+                  id: '5',
+                  comment: 'Teste comentário 5',
+                  user_id: '3',
+                  user_name: 'Teste Usuário 3',
+                  movie_id: 'tt1201607' 
+                }
+              ]
+          ), {status: 200}
+      ],
+      [
+          'Comentário feito com sucesso!', {status: 200}
+      ],
+      [
+        JSON.stringify( 
+            [
+              { 
+                id: '1',
+                comment: 'Teste comentário 1',
+                user_id: '1',
+                user_name: 'Teste Usuário 1',
+                movie_id: 'tt1201607' 
+              },
+              { 
+                id: '2',
+                comment: 'Teste comentário 2',
+                user_id: '1',
+                user_name: 'Teste Usuário 1',
+                movie_id: 'tt1201607' 
+              },
+              { 
+                id: '3',
+                comment: 'Teste comentário 3',
+                user_id: '2',
+                user_name: 'Teste Usuário 2',
+                movie_id: 'tt1201607' 
+              },
+              { 
+                id: '4',
+                comment: 'Teste comentário 4',
+                user_id: '2',
+                user_name: 'Teste Usuário 2',
+                movie_id: 'tt1201607'
+              },
+              { 
+                id: '5',
+                comment: 'Teste comentário 5',
+                user_id: '3',
+                user_name: 'Teste Usuário 3',
+                movie_id: 'tt1201607' 
+              },
+              { 
+                id: '6',
+                comment: 'Teste comentário 6',
+                user_id: '3',
+                user_name: 'Teste Usuário 3',
+                movie_id: 'tt1201607'
+              }
+            ]
+        ), {status: 200}
+    ]
+
+  );
+    render(<MovieDetail />, { wrapper: BrowserRouter });
+
+    await new Promise((r) => setTimeout(r, 3000));
+
+    const inputComment = screen.getByPlaceholderText("Digite seu comentário");
+    fireEvent.change(inputComment, { target: { value: 'Teste comentário 6' } });
+
+    const buttons = screen.getAllByRole("button");
+    fireEvent.click(buttons[1]);
+
+    await new Promise((r) => setTimeout(r, 3000));
+
+    expect(screen.getByText('Teste comentário 6')).toBeTruthy();
+  }, 30000);
+
+  it('not-logged' , () => {
+    localStorage.clear();
+
+    render(<MovieDetail />, { wrapper: BrowserRouter });
+
+    expect(window.alert).toBeCalledWith('Usuário não logado!');
   });
 });

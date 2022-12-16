@@ -57,6 +57,7 @@ describe('mylist', () => {
   });
 
   it('delete-movie', async () => {
+    localStorage.clear();
     localStorage.setItem("token", "token-válido");
     localStorage.setItem("userData", JSON.stringify([{ userId: 1, userName: 'Jair' }]));
     fetch.mockResponses(
@@ -152,6 +153,7 @@ describe('mylist', () => {
   })
 
   it('unwatch-movie', async () => {
+    localStorage.clear();
     localStorage.setItem("token", "token-válido");
     localStorage.setItem("userData", JSON.stringify([{ userId: 1, userName: 'Jair' }]));
     fetch.mockResponses(
@@ -246,6 +248,14 @@ describe('mylist', () => {
 
     const buttons2 = screen.getAllByRole("watched");
     expect(buttons2).toHaveLength(2);
-  })
+  });
+
+  it('not-logged' , () => {
+    localStorage.clear();
+
+    render(<MyList />, { wrapper: BrowserRouter });
+
+    expect(window.alert).toBeCalledWith('Usuário não logado!');
+  });
 
 });
