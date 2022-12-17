@@ -54,10 +54,78 @@ describe('home', () => {
     expect(screen.getByPlaceholderText('Digite para pesquisar...')).toBeTruthy();
   });
 
-  
+  it('search-and-add', async () => {
+	localStorage.setItem("token", "token-válido");
+    localStorage.setItem("userData", JSON.stringify([{ userId: 1, userName: 'Jair' }]));
+
+	fetch.mockResponses(
+		[
+			JSON.stringify(
+			{ 
+				Search: 
+				[
+					{
+						Title: 'Harry Potter and the Deathly Hallows: Part 2',
+						Year: '2011',
+						imdbID: 'tt1201607',
+						Type: 'movie',
+						Poster: 'https://m.media-amazon.com/images/M/MV5BMGVmMWNiMDktYjQ0Mi00MWIxLTk0N2UtN2ZlYTdkN2IzNDNlXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_SX300.jpg'
+					},
+					{
+						Title: 'Harry Potter and the Deathly Hallows: Part 2',
+						Year: '2011',
+						imdbID: 'tt1201607',
+						Type: 'movie',
+						Poster: 'https://m.media-amazon.com/images/M/MV5BMGVmMWNiMDktYjQ0Mi00MWIxLTk0N2UtN2ZlYTdkN2IzNDNlXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_SX300.jpg'
+					},
+					{
+						Title: 'Harry Potter and the Deathly Hallows: Part 2',
+						Year: '2011',
+						imdbID: 'tt1201607',
+						Type: 'movie',
+						Poster: 'https://m.media-amazon.com/images/M/MV5BMGVmMWNiMDktYjQ0Mi00MWIxLTk0N2UtN2ZlYTdkN2IzNDNlXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_SX300.jpg'
+					},
+					{
+						Title: 'Harry Potter and the Deathly Hallows: Part 2',
+						Year: '2011',
+						imdbID: 'tt1201607',
+						Type: 'movie',
+						Poster: 'https://m.media-amazon.com/images/M/MV5BMGVmMWNiMDktYjQ0Mi00MWIxLTk0N2UtN2ZlYTdkN2IzNDNlXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_SX300.jpg'
+					}
+				],
+				totalResults: '838',
+				Response: 'True'
+			}
+			), {status: 200}
+		],
+		[
+			'Adicionado o filme na sua lista!', {status: 200}
+		]);
+
+    render(<Home />, { wrapper: BrowserRouter });
+
+	await new Promise((r) => setTimeout(r, 3000));
+
+	const inputSearch = screen.getByPlaceholderText("Digite para pesquisar...");
+    fireEvent.change(inputSearch, { target: { value: 'harry' } });
+
+	await new Promise((r) => setTimeout(r, 3000));
+    
+	const addToMyList = screen.getAllByText("Adicionar a minha lista");
+    expect(addToMyList).toHaveLength(4);
+
+	const addToMyListClick = screen.getAllByRole("div");
+
+	fireEvent.click(addToMyListClick[0]);
+
+	await new Promise((r) => setTimeout(r, 3000));
+
+	expect(window.alert).toBeCalledWith('Adicionado o filme na sua lista!');
+  }, 30000);
 
   it('not logged', async () => {
 	localStorage.clear();
+
     render(<Home />, { wrapper: BrowserRouter });
 
     await new Promise((r) => setTimeout(r, 3000));

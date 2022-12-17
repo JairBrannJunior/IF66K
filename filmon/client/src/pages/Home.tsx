@@ -16,11 +16,13 @@ function Home() {
     const history = useNavigate();
 
     const getApiMovies = async (search: string) => {
+        console.log(search);
         if (token) {
+            if (search === '')
+                return;
             const url = `https://www.omdbapi.com/?s=${search}&apikey=a0135b45`;
 
-            const response = await fetch(url);
-            const json = await response.json();
+            const json = await fetch(url).then(response => { return response.json() }) as any;
     
             if (json.Search)
                 setMovies(json.Search);
@@ -35,6 +37,7 @@ function Home() {
     }, [search]);
 
     function addMovieToMyList(userId: any, movieId: string, movieName: string, movieImg: string) {
+        console.log('passei aqui');
         if (token) {
             fetch('http://localhost:3001/myListMovies', {
                 method: 'POST',
@@ -51,6 +54,7 @@ function Home() {
                         return response.text();
                 })
                 .then(data => {
+                    console.log(data);
                     if (data === '401') {
                         alert('Usuário não logado!');
                         history("/");
@@ -82,7 +86,7 @@ function Home() {
                     {movies.map((movie, index) => (
                         <div className="image-container d-flex justify-content-start m-3">
                             <img src={movie['Poster']} alt="movie" onClick={() => navigateToDetail(movie)}></img>
-                            <div className="overlay d-flex align-items-center justify-content-center" onClick={() => addMovieToMyList(userData.userId, movie['imdbID'], movie['Title'], movie['Poster'])}>
+                            <div role="div" className="overlay d-flex align-items-center justify-content-center" onClick={() => addMovieToMyList(userData.userId, movie['imdbID'], movie['Title'], movie['Poster'])}>
                                 <span className="mr-2">Adicionar a minha lista</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
